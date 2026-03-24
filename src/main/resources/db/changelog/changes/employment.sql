@@ -4,7 +4,7 @@
 CREATE TABLE EMPLOYMENT (
                             ID NUMBER PRIMARY KEY,
                             EMPLOYEE_ID NUMBER NOT NULL UNIQUE,
-                            NUMBER VARCHAR2(100),
+                            "NUMBER" VARCHAR2(100),
                             HIRE_DATE DATE,
                             TERMINATION_DATE DATE,
                             JOB_TITLE VARCHAR2(255),
