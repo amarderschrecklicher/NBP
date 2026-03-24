@@ -16,9 +16,6 @@ import java.util.Date;
 public class EmployeeResponse {
     private Long id;
     private Long userId;
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
     private String gender;
     private String nationality;
     private String maritalStatus;
