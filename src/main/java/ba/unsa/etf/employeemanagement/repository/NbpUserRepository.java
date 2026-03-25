@@ -25,15 +25,21 @@ public class NbpUserRepository {
     private static final String TABLE = SCHEMA + ".NBP_USER";
 
     public List<NbpUser> findAll() {
-        String sql = "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, USERNAME, PHONE_NUMBER, BIRTH_DATE, ADDRESS_ID, ROLE_ID " +
+        String sql = "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PHONE_NUMBER, BIRTH_DATE, ADDRESS_ID, ROLE_ID " +
                 "FROM " + TABLE + " ORDER BY ID";
         return jdbcTemplate.query(sql, mapper);
     }
 
     public Optional<NbpUser> findById(Long id) {
-        String sql = "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, USERNAME, PHONE_NUMBER, BIRTH_DATE, ADDRESS_ID, ROLE_ID " +
+        String sql = "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PHONE_NUMBER, BIRTH_DATE, ADDRESS_ID, ROLE_ID " +
                 "FROM " + TABLE + " WHERE ID = ?";
         List<NbpUser> res = jdbcTemplate.query(sql, mapper, id);
+        return res.stream().findFirst();
+    }
+
+    public Optional<String> findPasswordById(Long id) {
+        String sql = "SELECT PASSWORD FROM " + TABLE + " WHERE ID = ?";
+        List<String> res = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("PASSWORD"), id);
         return res.stream().findFirst();
     }
 

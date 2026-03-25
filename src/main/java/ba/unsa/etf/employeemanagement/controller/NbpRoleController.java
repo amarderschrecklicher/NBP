@@ -1,5 +1,6 @@
 package ba.unsa.etf.employeemanagement.controller;
 
+import ba.unsa.etf.employeemanagement.dto.request.NbpRoleRequest;
 import ba.unsa.etf.employeemanagement.dto.response.NbpRoleResponse;
 import ba.unsa.etf.employeemanagement.service.impl.NbpRoleService;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class NbpRoleController {
 
     @PutMapping("/{id}")
     public ResponseEntity<NbpRoleResponse> update(@PathVariable Long id,
-                                                    @Valid @RequestBody NbpRoleResponse request) {
+                                                    @Valid @RequestBody NbpRoleRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 

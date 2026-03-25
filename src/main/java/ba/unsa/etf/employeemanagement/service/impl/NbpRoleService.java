@@ -1,5 +1,6 @@
 package ba.unsa.etf.employeemanagement.service.impl;
 
+import ba.unsa.etf.employeemanagement.dto.request.NbpRoleRequest;
 import ba.unsa.etf.employeemanagement.dto.response.NbpRoleResponse;
 import ba.unsa.etf.employeemanagement.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.employeemanagement.mapper.NbpRoleMapper;
@@ -27,16 +28,21 @@ public class NbpRoleService {
         return mapper.mapToResponse(entity);
     }
 
-    public NbpRoleResponse update(Long id, NbpRoleResponse dto) {
+    public NbpRoleResponse update(Long id, NbpRoleRequest request) {
         if (repository.findById(id).isEmpty()) {
             throw new ResourceNotFoundException("NBP_ROLE not found");
         }
 
-        dto.setId(id); // ID dolazi iz path-a.
-        NbpRole entity = mapper.mapToEntity(dto);
+        NbpRole entity = mapper.mapToEntity(request);
         entity.setId(id);
-        repository.update(id, entity);
-        return mapper.mapToResponse(repository.findById(id).orElseThrow());
+        int rowsAffected = repository.update(id, entity);
+        if (rowsAffected == 0) {
+            throw new ResourceNotFoundException("NBP_ROLE not found");
+        }
+
+        NbpRole updated = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_ROLE not found after update"));
+        return mapper.mapToResponse(updated);
     }
 
     public long count() {

@@ -1,5 +1,6 @@
 package ba.unsa.etf.employeemanagement.service.impl;
 
+import ba.unsa.etf.employeemanagement.dto.request.NbpUserRequest;
 import ba.unsa.etf.employeemanagement.dto.response.NbpUserResponse;
 import ba.unsa.etf.employeemanagement.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.employeemanagement.mapper.NbpUserMapper;
@@ -27,16 +28,27 @@ public class NbpUserService {
         return mapper.mapToResponse(entity);
     }
 
-    public NbpUserResponse update(Long id, NbpUserResponse dto) {
-        if (repository.findById(id).isEmpty()) {
+    public NbpUserResponse update(Long id, NbpUserRequest request) {
+        repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found"));
+
+        NbpUser entity = mapper.mapToEntity(request);
+        entity.setId(id);
+
+        // Ako password nije poslan, zadrži postojeći.
+        if (request.getPassword() == null) {
+            String existingPassword = repository.findPasswordById(id).orElse(null);
+            entity.setPassword(existingPassword);
+        }
+
+        int rowsAffected = repository.update(id, entity);
+        if (rowsAffected == 0) {
             throw new ResourceNotFoundException("NBP_USER not found");
         }
 
-        dto.setId(id); // ID dolazi iz path-a, ne iz request body-a.
-        NbpUser entity = mapper.mapToEntity(dto);
-        entity.setId(id);
-        repository.update(id, entity);
-        return mapper.mapToResponse(repository.findById(id).orElseThrow());
+        NbpUser updated = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found after update"));
+        return mapper.mapToResponse(updated);
     }
 
     public long count() {

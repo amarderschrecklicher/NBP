@@ -1,5 +1,6 @@
 package ba.unsa.etf.employeemanagement.controller;
 
+import ba.unsa.etf.employeemanagement.dto.request.NbpUserRequest;
 import ba.unsa.etf.employeemanagement.dto.response.NbpUserResponse;
 import ba.unsa.etf.employeemanagement.service.impl.NbpUserService;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class NbpUserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<NbpUserResponse> update(@PathVariable Long id,
-                                                    @Valid @RequestBody NbpUserResponse request) {
+                                                    @Valid @RequestBody NbpUserRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 
