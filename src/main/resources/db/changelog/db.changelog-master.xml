@@ -6,10 +6,11 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-
     <include file="db/changelog/changes/employee.sql"/>
     <include file="db/changelog/changes/department.sql"/>
     <include file="db/changelog/changes/employment.sql"/>
+    <include file="db/changelog/changes/address.sql"/>
+
 
     <include file="db/changelog/changes/vacation.sql"/>
     <include file="db/changelog/changes/holiday.sql"/>
