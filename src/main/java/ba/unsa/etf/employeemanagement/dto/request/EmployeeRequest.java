@@ -12,18 +12,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeRequest {
-    @NotBlank
-    private String firstName;
-    @NotBlank
-    private String lastName;
-
-    @NotNull
-    private Date dateOfBirth;
-
+    private Long userId;
     private String gender;
     private String nationality;
     private String maritalStatus;
-
-    @NotNull
-    private Long userId;
 }
