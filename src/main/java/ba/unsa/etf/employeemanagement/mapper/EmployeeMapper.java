@@ -11,15 +11,11 @@ import java.sql.SQLException;
 
 @Component
 public class EmployeeMapper implements RowMapper<Employee> {
-
     @Override
     public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Employee(
                 rs.getLong("id"),
-                rs.getLong("userId"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getDate("date_of_birth"),
+                rs.getLong("user_id"),
                 rs.getString("gender"),
                 rs.getString("nationality"),
                 rs.getString("marital_status")
@@ -30,24 +26,19 @@ public class EmployeeMapper implements RowMapper<Employee> {
         return new Employee(
                 null,
                 request.getUserId(),
-                request.getFirstName(),
-                request.getLastName(),
-                request.getDateOfBirth(),
                 request.getGender(),
                 request.getNationality(),
                 request.getMaritalStatus()
         );
     }
-    public EmployeeResponse mapToResponse(Employee employee) {
+
+    public EmployeeResponse mapToResponse(Employee entity) {
         return EmployeeResponse.builder()
-                .id(employee.getId())
-                .userId(employee.getUserId())
-                .firstName(employee.getFirstName())
-                .lastName(employee.getLastName())
-                .dateOfBirth(employee.getDateOfBirth())
-                .gender(employee.getGender())
-                .nationality(employee.getNationality())
-                .maritalStatus(employee.getMaritalStatus())
+                .id(entity.getId())
+                .userId(entity.getUserId())
+                .gender(entity.getGender())
+                .nationality(entity.getNationality())
+                .maritalStatus(entity.getMaritalStatus())
                 .build();
     }
 }

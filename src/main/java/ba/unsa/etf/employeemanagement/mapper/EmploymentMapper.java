@@ -15,14 +15,14 @@ public class EmploymentMapper implements RowMapper<Employment> {
     public Employment mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Employment(
                 rs.getLong("id"),
-                rs.getLong("employeeId"),
-                rs.getString("number"),
-                rs.getDate("hireDate"),
-                rs.getDate("terminationDate"),
+                rs.getLong("employee_id"),
+                rs.getString("employment_number"),
+                rs.getDate("hire_date"),
+                rs.getDate("termination_date"),
                 rs.getString("job_title"),
-                rs.getString("employmentType"),
+                rs.getString("employment_type"),
                 rs.getString("status"),
-                rs.getLong("departmentId")
+                rs.getLong("department_id")
         );
     }
 

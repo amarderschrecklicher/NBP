@@ -22,7 +22,7 @@ public class EmploymentRepository {
 
     public List<Employment> findAll() {
         String sql = """
-                SELECT id, employee_id, number, hire_date, termination_date,
+                SELECT id, employee_id, employment_number, hire_date, termination_date,
                        job_title, employment_type, status, department_id
                 FROM employment
                 """;
@@ -31,7 +31,7 @@ public class EmploymentRepository {
 
     public Optional<Employment> findById(Long id) {
         String sql = """
-                SELECT id, employee_id, number, hire_date, termination_date,
+                SELECT id, employee_id, employment_number, hire_date, termination_date,
                        job_title, employment_type, status, department_id
                 FROM employment
                 WHERE id = ?
@@ -43,7 +43,7 @@ public class EmploymentRepository {
     public Long save(Employment employment) {
         String sql = """
                 INSERT INTO employment (
-                    employee_id, number, hire_date, termination_date,
+                    employee_id, employment_number, hire_date, termination_date,
                     job_title, employment_type, status, department_id
                 )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -75,7 +75,7 @@ public class EmploymentRepository {
         String sql = """
                 UPDATE employment
                 SET employee_id = ?,
-                    number = ?,
+                    employment_number = ?,
                     hire_date = ?,
                     termination_date = ?,
                     job_title = ?,
