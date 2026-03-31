@@ -11,7 +11,7 @@
     <include file="db/changelog/changes/employment.sql"/>
     <include file="db/changelog/changes/address.sql"/>
     <include file="db/changelog/changes/personal_contact.sql"/>
-
+    <include file="db/changelog/changes/emergency_contact.sql"/>
 
     <include file="db/changelog/changes/vacation.sql"/>
     <include file="db/changelog/changes/holiday.sql"/>
