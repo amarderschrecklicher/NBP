@@ -15,4 +15,6 @@
     <include file="db/changelog/changes/vacation.sql"/>
     <include file="db/changelog/changes/holiday.sql"/>
     <include file="db/changelog/changes/finance.sql"/>
+    <include file="db/changelog/changes/vehicle.sql"/>
+
 </databaseChangeLog>
