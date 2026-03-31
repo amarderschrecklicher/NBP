@@ -10,6 +10,7 @@
     <include file="db/changelog/changes/department.sql"/>
     <include file="db/changelog/changes/employment.sql"/>
     <include file="db/changelog/changes/address.sql"/>
+    <include file="db/changelog/changes/personal_contact.sql"/>
 
 
     <include file="db/changelog/changes/vacation.sql"/>
