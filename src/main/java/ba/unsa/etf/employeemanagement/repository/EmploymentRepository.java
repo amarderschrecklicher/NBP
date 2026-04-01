@@ -43,10 +43,10 @@ public class EmploymentRepository {
     public Long save(Employment employment) {
         String sql = """
                 INSERT INTO employment (
-                    employee_id, employment_number, hire_date, termination_date,
+                    id, employee_id, employment_number, hire_date, termination_date,
                     job_title, employment_type, status, department_id
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (EMPLOYMENT_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

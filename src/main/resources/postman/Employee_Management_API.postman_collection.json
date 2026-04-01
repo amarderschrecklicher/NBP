@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "Employee Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Role",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Admin\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/roles" }
+      }
+    },
+    {
+      "name": "2. Create Address",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"street\": \"Zmaja od Bosne 8\",\n  \"city\": \"Sarajevo\",\n  \"postalCode\": \"71000\",\n  \"country\": \"Bosnia and Herzegovina\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/addresses" }
+      }
+    },
+    {
+      "name": "3. Create User",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"securePass123\",\n  \"username\": \"johndoe\",\n  \"phoneNumber\": \"+38761123456\",\n  \"birthDate\": \"1995-06-15\",\n  \"addressId\": 1,\n  \"roleId\": 1\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/users" }
+      }
+    },
+    {
+      "name": "4. Create Employee (full)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"password\": \"securePass456\",\n  \"username\": \"janesmith\",\n  \"phoneNumber\": \"+38762654321\",\n  \"birthDate\": \"1992-03-20\",\n  \"roleId\": 1,\n\n  \"street\": \"Maršala Tita 10\",\n  \"city\": \"Sarajevo\",\n  \"postalCode\": \"71000\",\n  \"country\": \"Bosnia and Herzegovina\",\n\n  \"gender\": \"F\",\n  \"nationality\": \"Bosnian\",\n  \"maritalStatus\": \"Single\",\n\n  \"employmentNumber\": \"EMP-2026-001\",\n  \"hireDate\": \"2026-04-01\",\n  \"terminationDate\": null,\n  \"jobTitle\": \"Software Engineer\",\n  \"employmentType\": \"Full-time\",\n  \"employmentStatus\": \"Active\",\n\n  \"departmentId\": 1\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/employees" }
+      }
+    },
+    {
+      "name": "4b. Create Employee (with new department)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Amar\",\n  \"lastName\": \"Hodzic\",\n  \"email\": \"amar.hodzic@example.com\",\n  \"password\": \"securePass789\",\n  \"username\": \"amarhodzic\",\n  \"phoneNumber\": \"+38763111222\",\n  \"birthDate\": \"1990-01-10\",\n  \"roleId\": 1,\n\n  \"street\": \"Ferhadija 15\",\n  \"city\": \"Sarajevo\",\n  \"postalCode\": \"71000\",\n  \"country\": \"Bosnia and Herzegovina\",\n\n  \"gender\": \"M\",\n  \"nationality\": \"Bosnian\",\n  \"maritalStatus\": \"Married\",\n\n  \"employmentNumber\": \"EMP-2026-002\",\n  \"hireDate\": \"2026-04-01\",\n  \"terminationDate\": null,\n  \"jobTitle\": \"Team Lead\",\n  \"employmentType\": \"Full-time\",\n  \"employmentStatus\": \"Active\",\n\n  \"departmentId\": null,\n  \"departmentName\": \"Engineering\",\n  \"departmentDescription\": \"Software Engineering Department\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/employees" }
+      }
+    },
+    {
+      "name": "5. Create Department",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Human Resources\",\n  \"description\": \"HR Department\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/departments" }
+      }
+    },
+    {
+      "name": "6. Create Employment",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": 1,\n  \"number\": \"EMP-2026-002\",\n  \"hireDate\": \"2026-04-01\",\n  \"terminationDate\": null,\n  \"jobTitle\": \"Project Manager\",\n  \"employmentType\": \"Full-time\",\n  \"status\": \"Active\",\n  \"departmentId\": 1\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/employments" }
+      }
+    },
+    {
+      "name": "7. Create Holiday",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"holidayName\": \"New Year\",\n  \"holidayDate\": \"2026-01-01\",\n  \"country\": \"Bosnia and Herzegovina\",\n  \"description\": \"New Year's Day\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/holidays" }
+      }
+    },
+    {
+      "name": "8. Create Vacation",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": 1,\n  \"startDate\": \"2026-07-01\",\n  \"endDate\": \"2026-07-15\",\n  \"vacationType\": \"Annual\",\n  \"status\": \"Pending\",\n  \"approvedBy\": null,\n  \"reason\": \"Summer vacation\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/vacations" }
+      }
+    },
+    {
+      "name": "9. Create Family Member",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": 1,\n  \"firstName\": \"Marko\",\n  \"lastName\": \"Smith\",\n  \"relation\": \"Brother\",\n  \"dateOfBirth\": \"1998-11-05\",\n  \"dependent\": 0,\n  \"occupation\": \"Student\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/family-members" }
+      }
+    },
+    {
+      "name": "10. Create Emergency Contact",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": 1,\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Smith\",\n  \"relationship\": \"Mother\",\n  \"phoneNumber\": \"+38761999888\",\n  \"email\": \"ana.smith@example.com\",\n  \"address\": \"Zmaja od Bosne 8, Sarajevo\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/emergency-contacts" }
+      }
+    },
+    {
+      "name": "11. Create Personal Contact",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": 1,\n  \"phoneNumber\": \"+38761555444\",\n  \"personalEmail\": \"jane.personal@example.com\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/personal-contacts" }
+      }
+    }
+  ]
+}
+

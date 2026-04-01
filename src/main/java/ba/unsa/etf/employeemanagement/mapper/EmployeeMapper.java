@@ -25,7 +25,7 @@ public class EmployeeMapper implements RowMapper<Employee> {
     public Employee mapToEntity(EmployeeRequest request) {
         return new Employee(
                 null,
-                request.getUserId(),
+                null,
                 request.getGender(),
                 request.getNationality(),
                 request.getMaritalStatus()

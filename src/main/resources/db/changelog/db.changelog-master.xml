@@ -10,14 +10,19 @@
     <include file="db/changelog/changes/department.sql"/>
     <include file="db/changelog/changes/employment.sql"/>
     <include file="db/changelog/changes/address.sql"/>
-
+    <include file="db/changelog/changes/personal_contact.sql"/>
+    <include file="db/changelog/changes/emergency_contact.sql"/>
+    <include file="db/changelog/changes/family_member.sql"/>
 
     <include file="db/changelog/changes/vacation.sql"/>
     <include file="db/changelog/changes/holiday.sql"/>
-    <include file="db/changelog/changes/finance.sql"/>
-    <include file="db/changelog/changes/vehicle.sql"/>
-    <include file="db/changelog/changes/work_permit.sql"/>
+    <include file="db/changelog/changes/triggers-audit.sql"/>
+
     <include file="db/changelog/changes/disability.sql"/>
+    <include file="db/changelog/changes/vehicle.sql"/>
+    <include file="db/changelog/changes/finance.sql"/>
+    <include file="db/changelog/changes/work_permit.sql"/>
+
 
 
 </databaseChangeLog>

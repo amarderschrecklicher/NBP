@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeResponse {
+public class PersonalContactResponse {
     private Long id;
-    private Long userId;
-    private String gender;
-    private String nationality;
-    private String maritalStatus;
-
-    private NbpUserResponse user;
-    private EmploymentResponse employment;
+    private Long employeeId;
+    private String phoneNumber;
+    private String personalEmail;
 }

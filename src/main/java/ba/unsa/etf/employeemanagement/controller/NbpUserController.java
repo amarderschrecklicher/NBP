@@ -5,6 +5,7 @@ import ba.unsa.etf.employeemanagement.dto.response.NbpUserResponse;
 import ba.unsa.etf.employeemanagement.service.impl.NbpUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,16 @@ public class NbpUserController {
     @GetMapping("/{id}")
     public NbpUserResponse findById(@PathVariable Long id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/username/{username}")
+    public NbpUserResponse findByUsername(@PathVariable String username) {
+        return service.findByUsername(username);
+    }
+
+    @PostMapping
+    public ResponseEntity<NbpUserResponse> create(@Valid @RequestBody NbpUserRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
     }
 
     @PutMapping("/{id}")

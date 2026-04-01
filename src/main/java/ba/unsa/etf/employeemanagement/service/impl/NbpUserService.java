@@ -28,6 +28,12 @@ public class NbpUserService {
         return mapper.mapToResponse(entity);
     }
 
+    public NbpUserResponse findByUsername(String username) {
+        NbpUser entity = repository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found with username: " + username));
+        return mapper.mapToResponse(entity);
+    }
+
     public NbpUserResponse update(Long id, NbpUserRequest request) {
         repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found"));
@@ -49,6 +55,14 @@ public class NbpUserService {
         NbpUser updated = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found after update"));
         return mapper.mapToResponse(updated);
+    }
+
+    public NbpUserResponse save(NbpUserRequest request) {
+        NbpUser entity = mapper.mapToEntity(request);
+        Long generatedId = repository.save(entity);
+        NbpUser saved = repository.findById(generatedId)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found after save"));
+        return mapper.mapToResponse(saved);
     }
 
     public long count() {
