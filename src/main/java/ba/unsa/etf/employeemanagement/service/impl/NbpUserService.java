@@ -28,6 +28,12 @@ public class NbpUserService {
         return mapper.mapToResponse(entity);
     }
 
+    public NbpUserResponse findByUsername(String username) {
+        NbpUser entity = repository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found with username: " + username));
+        return mapper.mapToResponse(entity);
+    }
+
     public NbpUserResponse update(Long id, NbpUserRequest request) {
         repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found"));

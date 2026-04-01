@@ -37,6 +37,13 @@ public class NbpUserRepository {
         return res.stream().findFirst();
     }
 
+    public Optional<NbpUser> findByUsername(String username) {
+        String sql = "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PHONE_NUMBER, BIRTH_DATE, ADDRESS_ID, ROLE_ID " +
+                "FROM " + TABLE + " WHERE USERNAME = ?";
+        List<NbpUser> res = jdbcTemplate.query(sql, mapper, username);
+        return res.stream().findFirst();
+    }
+
     public Optional<String> findPasswordById(Long id) {
         String sql = "SELECT PASSWORD FROM " + TABLE + " WHERE ID = ?";
         List<String> res = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("PASSWORD"), id);

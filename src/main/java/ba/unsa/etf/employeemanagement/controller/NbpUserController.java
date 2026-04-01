@@ -28,6 +28,11 @@ public class NbpUserController {
         return service.findById(id);
     }
 
+    @GetMapping("/username/{username}")
+    public NbpUserResponse findByUsername(@PathVariable String username) {
+        return service.findByUsername(username);
+    }
+
     @PostMapping
     public ResponseEntity<NbpUserResponse> create(@Valid @RequestBody NbpUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
