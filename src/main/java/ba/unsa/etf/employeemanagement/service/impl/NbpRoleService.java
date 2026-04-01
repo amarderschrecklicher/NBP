@@ -45,6 +45,14 @@ public class NbpRoleService {
         return mapper.mapToResponse(updated);
     }
 
+    public NbpRoleResponse save(NbpRoleRequest request) {
+        NbpRole entity = mapper.mapToEntity(request);
+        Long generatedId = repository.save(entity);
+        NbpRole saved = repository.findById(generatedId)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_ROLE not found after save"));
+        return mapper.mapToResponse(saved);
+    }
+
     public long count() {
         return repository.count();
     }

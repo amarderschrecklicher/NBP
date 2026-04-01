@@ -51,6 +51,14 @@ public class NbpUserService {
         return mapper.mapToResponse(updated);
     }
 
+    public NbpUserResponse save(NbpUserRequest request) {
+        NbpUser entity = mapper.mapToEntity(request);
+        Long generatedId = repository.save(entity);
+        NbpUser saved = repository.findById(generatedId)
+                .orElseThrow(() -> new ResourceNotFoundException("NBP_USER not found after save"));
+        return mapper.mapToResponse(saved);
+    }
+
     public long count() {
         return repository.count();
     }

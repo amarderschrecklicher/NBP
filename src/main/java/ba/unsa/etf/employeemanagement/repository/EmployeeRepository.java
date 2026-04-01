@@ -30,7 +30,7 @@ public class EmployeeRepository {
     }
 
     public Long save(Employee employee) {
-        String sql = "INSERT INTO Employee (user_id, gender, nationality, marital_status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Employee (id, user_id, gender, nationality, marital_status) VALUES (EMPLOYEE_SEQ.NEXTVAL, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
