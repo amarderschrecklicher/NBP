@@ -18,4 +18,11 @@
     <include file="db/changelog/changes/holiday.sql"/>
     <include file="db/changelog/changes/triggers-audit.sql"/>
 
+    <include file="db/changelog/changes/disability.sql"/>
+    <include file="db/changelog/changes/vehicle.sql"/>
+    <include file="db/changelog/changes/finance.sql"/>
+    <include file="db/changelog/changes/work_permit.sql"/>
+
+
+
 </databaseChangeLog>
