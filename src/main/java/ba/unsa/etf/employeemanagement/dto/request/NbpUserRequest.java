@@ -12,6 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 public class NbpUserRequest {
 
+    public interface OnCreate {}
+
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 255, message = "First name must be between 2 and 255 characters")
     @Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿčćžšđČĆŽŠĐ' -]+$", message = "First name can only contain letters, spaces, hyphens, and apostrophes")
@@ -27,7 +29,8 @@ public class NbpUserRequest {
     @Size(max = 255, message = "Email must not exceed 255 characters")
     private String email;
 
-    /** Required on create; on update omit or leave null to keep existing password (see NbpUserService). */
+    /** Required on create; on update omit, leave null, or provide a blank/whitespace-only value to keep the existing password (see NbpUserService). */
+    @NotBlank(groups = OnCreate.class, message = "Password is required")
     @Size(min = 8, max = 128, message = "Password must be between 8 and 128 characters when provided")
     private String password;
 

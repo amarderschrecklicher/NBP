@@ -59,9 +59,6 @@ public class NbpUserService {
     }
 
     public NbpUserResponse save(NbpUserRequest request) {
-        if (!StringUtils.hasText(request.getPassword())) {
-            throw new IllegalArgumentException("Password is required");
-        }
         NbpUser entity = mapper.mapToEntity(request);
         Long generatedId = repository.save(entity);
         NbpUser saved = repository.findById(generatedId)
