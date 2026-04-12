@@ -4,9 +4,11 @@ import ba.unsa.etf.employeemanagement.dto.request.NbpUserRequest;
 import ba.unsa.etf.employeemanagement.dto.response.NbpUserResponse;
 import ba.unsa.etf.employeemanagement.service.impl.NbpUserService;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,8 @@ public class NbpUserController {
     }
 
     @PostMapping
-    public ResponseEntity<NbpUserResponse> create(@Valid @RequestBody NbpUserRequest request) {
+    public ResponseEntity<NbpUserResponse> create(
+            @Validated({Default.class, NbpUserRequest.OnCreate.class}) @RequestBody NbpUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
     }
 
