@@ -8,6 +8,7 @@ import ba.unsa.etf.employeemanagement.model.NbpUser;
 import ba.unsa.etf.employeemanagement.repository.NbpUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -41,8 +42,8 @@ public class NbpUserService {
         NbpUser entity = mapper.mapToEntity(request);
         entity.setId(id);
 
-        // Ako password nije poslan, zadrži postojeći.
-        if (request.getPassword() == null) {
+        // Ako password nije poslan ili je prazan, zadrži postojeći.
+        if (!StringUtils.hasText(request.getPassword())) {
             String existingPassword = repository.findPasswordById(id).orElse(null);
             entity.setPassword(existingPassword);
         }
