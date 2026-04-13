@@ -11,5 +11,5 @@ public class HolidayRequest {
     private Date holidayDate;
     private String country;
     private String description;
+    private String religion; // For user-specific holidays
 }
-

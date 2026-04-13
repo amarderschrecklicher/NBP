@@ -13,5 +13,5 @@ public class HolidayResponse {
     private Date holidayDate;
     private String country;
     private String description;
+    private String religion; // For user-specific holidays
 }
-
