@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EmployeeValidatorTest {
     @Test
     void validEmployee_passesValidation() {
-        Employee e = new Employee(1L, 2L, "Male", "Bosnian", "Single");
+        Employee e = new Employee(1L, 2L, "Male", "Bosnian", "Single", null);
         assertDoesNotThrow(() -> EmployeeValidator.validate(e));
     }
 
@@ -18,26 +18,25 @@ public class EmployeeValidatorTest {
 
     @Test
     void missingUserId_throwsException() {
-        Employee e = new Employee(1L, null, "Male", "Bosnian", "Single");
+        Employee e = new Employee(1L, null, "Male", "Bosnian", "Single", null);
         assertThrows(IllegalArgumentException.class, () -> EmployeeValidator.validate(e));
     }
 
     @Test
     void invalidGender_throwsException() {
-        Employee e = new Employee(1L, 2L, "Unknown", "Bosnian", "Single");
+        Employee e = new Employee(1L, 2L, "Unknown", "Bosnian", "Single", null);
         assertThrows(IllegalArgumentException.class, () -> EmployeeValidator.validate(e));
     }
 
     @Test
     void emptyNationality_throwsException() {
-        Employee e = new Employee(1L, 2L, "Male", "", "Single");
+        Employee e = new Employee(1L, 2L, "Male", "", "Single", null);
         assertThrows(IllegalArgumentException.class, () -> EmployeeValidator.validate(e));
     }
 
     @Test
     void invalidMaritalStatus_throwsException() {
-        Employee e = new Employee(1L, 2L, "Male", "Bosnian", "Complicated");
+        Employee e = new Employee(1L, 2L, "Male", "Bosnian", "Complicated", null);
         assertThrows(IllegalArgumentException.class, () -> EmployeeValidator.validate(e));
     }
 }
-
