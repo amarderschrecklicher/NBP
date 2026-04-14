@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee {
+public class RefreshToken {
     private Long id;
+    private String token;
     private Long userId;
-    private String gender;
-    private String nationality;
-    private String maritalStatus;
-    private Long managerId;
+    private Date expiryDate;
 }

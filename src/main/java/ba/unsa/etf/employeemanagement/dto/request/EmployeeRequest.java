@@ -76,8 +76,10 @@ public class EmployeeRequest {
     @Past(message = "Birth date must be in the past")
     private Date birthDate;
 
-    @Positive(message = "Role ID must be a positive number")
-    private Long roleId;
+    // Use roleName instead of numeric roleId
+    // @ValueOfEnum(enumClass = EmsRole.class, message = "Role must be one of: EMS_ADMINISTRATOR, EMS_MANAGER, EMS_EMPLOYEE")
+    @NotBlank(message = "Role name is required")
+    private String roleName;
 
     // ── Employment fields ──
     @Size(max = 100, message = "Employment number must not exceed 100 characters")

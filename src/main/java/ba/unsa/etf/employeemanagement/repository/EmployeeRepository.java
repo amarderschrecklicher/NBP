@@ -19,18 +19,18 @@ public class EmployeeRepository {
     private final EmployeeMapper employeeMapper;
 
     public List<Employee> findAll() {
-        String sql = "SELECT id, user_id, gender, nationality, marital_status FROM Employee";
+        String sql = "SELECT id, user_id, gender, nationality, marital_status, manager_id FROM Employee";
         return jdbcTemplate.query(sql, employeeMapper);
     }
 
     public Optional<Employee> findById(Long id) {
-        String sql = "SELECT id, user_id, gender, nationality, marital_status FROM Employee WHERE id = ?";
+        String sql = "SELECT id, user_id, gender, nationality, marital_status, manager_id FROM Employee WHERE id = ?";
         List<Employee> results = jdbcTemplate.query(sql, employeeMapper, id);
         return results.stream().findFirst();
     }
 
     public Long save(Employee employee) {
-        String sql = "INSERT INTO Employee (id, user_id, gender, nationality, marital_status) VALUES (EMPLOYEE_SEQ.NEXTVAL, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Employee (id, user_id, gender, nationality, marital_status, manager_id) VALUES (EMPLOYEE_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -39,6 +39,11 @@ public class EmployeeRepository {
             ps.setString(2, employee.getGender());
             ps.setString(3, employee.getNationality());
             ps.setString(4, employee.getMaritalStatus());
+            if (employee.getManagerId() != null) {
+                ps.setLong(5, employee.getManagerId());
+            } else {
+                ps.setNull(5, java.sql.Types.NUMERIC);
+            }
             return ps;
         }, keyHolder);
 
@@ -46,12 +51,13 @@ public class EmployeeRepository {
     }
 
     public int update(Long id, Employee employee) {
-        String sql = "UPDATE Employee SET user_id = ?, gender = ?, nationality = ?, marital_status = ? WHERE id = ?";
+        String sql = "UPDATE Employee SET user_id = ?, gender = ?, nationality = ?, marital_status = ?, manager_id = ? WHERE id = ?";
         return jdbcTemplate.update(sql,
                 employee.getUserId(),
                 employee.getGender(),
                 employee.getNationality(),
                 employee.getMaritalStatus(),
+                employee.getManagerId(),
                 id);
     }
 

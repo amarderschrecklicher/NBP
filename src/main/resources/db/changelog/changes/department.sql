@@ -7,3 +7,5 @@ CREATE TABLE department (
     description VARCHAR2(255)
 );
 
+-- changeset ahmed:016
+ALTER TABLE department ADD CONSTRAINT UNIQUE_DEPARTMENT_NAME UNIQUE (name);

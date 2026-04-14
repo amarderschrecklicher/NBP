@@ -15,6 +15,7 @@ public class EmployeeResponse {
     private String gender;
     private String nationality;
     private String maritalStatus;
+    private Long managerId;
 
     private NbpUserResponse user;
     private EmploymentResponse employment;
