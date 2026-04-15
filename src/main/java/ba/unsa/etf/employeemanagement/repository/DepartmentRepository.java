@@ -28,6 +28,12 @@ public class DepartmentRepository {
         return res.stream().findFirst();
     }
 
+    public Optional<Department> findByName(String name) {
+        String sql = "SELECT id, name, description FROM department WHERE name = ?";
+        List<Department> res = jdbcTemplate.query(sql, mapper, name);
+        return res.stream().findFirst();
+    }
+
     public Long save(Department entity) {
         String sql = "INSERT INTO department (name, description) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

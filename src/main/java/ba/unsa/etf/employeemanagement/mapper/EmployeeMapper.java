@@ -13,12 +13,14 @@ import java.sql.SQLException;
 public class EmployeeMapper implements RowMapper<Employee> {
     @Override
     public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Long managerId = rs.getObject("manager_id", Long.class);
         return new Employee(
                 rs.getLong("id"),
                 rs.getLong("user_id"),
                 rs.getString("gender"),
                 rs.getString("nationality"),
-                rs.getString("marital_status")
+                rs.getString("marital_status"),
+                managerId
         );
     }
 
@@ -28,7 +30,8 @@ public class EmployeeMapper implements RowMapper<Employee> {
                 null,
                 request.getGender(),
                 request.getNationality(),
-                request.getMaritalStatus()
+                request.getMaritalStatus(),
+                null
         );
     }
 
@@ -39,6 +42,7 @@ public class EmployeeMapper implements RowMapper<Employee> {
                 .gender(entity.getGender())
                 .nationality(entity.getNationality())
                 .maritalStatus(entity.getMaritalStatus())
+                .managerId(entity.getManagerId())
                 .build();
     }
 }

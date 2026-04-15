@@ -3,18 +3,24 @@ package ba.unsa.etf.employeemanagement.controller;
 import ba.unsa.etf.employeemanagement.dto.request.VacationRequest;
 import ba.unsa.etf.employeemanagement.dto.response.VacationResponse;
 import ba.unsa.etf.employeemanagement.service.api.IVacationService;
+import ba.unsa.etf.employeemanagement.util.validation.VacationValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/vacations")
 @RequiredArgsConstructor
 public class VacationController {
     private final IVacationService service;
+    private final VacationValidator vacationValidator;
 
     @GetMapping
     public List<VacationResponse> findAll() { return service.findAll(); }
@@ -23,12 +29,27 @@ public class VacationController {
     public VacationResponse findById(@PathVariable Long id) { return service.findById(id); }
 
     @PostMapping
-    public ResponseEntity<VacationResponse> create(@Valid @RequestBody VacationRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody VacationRequest request,
+                                    BindingResult bindingResult) {
+        vacationValidator.validate(request, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(getErrors(bindingResult));
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VacationResponse> update(@PathVariable Long id, @Valid @RequestBody VacationRequest request) {
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @Valid @RequestBody VacationRequest request,
+                                    BindingResult bindingResult) {
+        vacationValidator.validate(request, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(getErrors(bindingResult));
+        }
+
         return ResponseEntity.ok(service.update(id, request));
     }
 
@@ -37,5 +58,14 @@ public class VacationController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
-}
 
+    private Map<String, String> getErrors(BindingResult bindingResult) {
+        Map<String, String> errors = new HashMap<>();
+        bindingResult.getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
+}

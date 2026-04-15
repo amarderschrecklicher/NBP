@@ -22,7 +22,6 @@
     <include file="db/changelog/changes/vehicle.sql"/>
     <include file="db/changelog/changes/finance.sql"/>
     <include file="db/changelog/changes/work_permit.sql"/>
-
-
-
+    <include file="db/changelog/changes/roles_seed.sql"/>
+    <include file="db/changelog/changes/refresh_token.sql"/>
 </databaseChangeLog>

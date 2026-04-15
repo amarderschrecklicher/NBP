@@ -12,10 +12,12 @@ import ba.unsa.etf.employeemanagement.model.*;
 import ba.unsa.etf.employeemanagement.repository.*;
 import ba.unsa.etf.employeemanagement.service.api.IEmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,8 @@ public class EmployeeService implements IEmployeeService {
     private final DepartmentRepository departmentRepository;
     private final EmploymentRepository employmentRepository;
     private final EmploymentMapper employmentMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final NbpRoleRepository roleRepository;
 
     @Override
     public List<EmployeeResponse> findAll() {
@@ -58,17 +62,26 @@ public class EmployeeService implements IEmployeeService {
         Address savedAddress = addressRepository.save(address);
 
         // 2. Create NbpUser
+        String encodedPassword = request.getPassword() != null ? passwordEncoder.encode(request.getPassword()) : null;
+
+        Long roleId = null;
+        if (request.getRoleName() != null) {
+            NbpRole role = roleRepository.findByName(request.getRoleName().toUpperCase())
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + request.getRoleName()));
+            roleId = role.getId();
+        }
+
         NbpUser nbpUser = new NbpUser(
                 null,
                 request.getFirstName(),
                 request.getLastName(),
                 request.getEmail(),
-                request.getPassword(),
+                encodedPassword,
                 request.getUsername(),
                 request.getPhoneNumber(),
                 request.getBirthDate(),
                 savedAddress.getId(),
-                request.getRoleId()
+                roleId
         );
         Long userId = nbpUserRepository.save(nbpUser);
         NbpUser savedUser = nbpUserRepository.findById(userId)
@@ -84,8 +97,13 @@ public class EmployeeService implements IEmployeeService {
         // 4. Resolve or create Department
         Long departmentId = request.getDepartmentId();
         if (departmentId == null && request.getDepartmentName() != null) {
-            Department department = new Department(null, request.getDepartmentName(), request.getDepartmentDescription());
-            departmentId = departmentRepository.save(department);
+            Optional<Department> existingDept = departmentRepository.findByName(request.getDepartmentName());
+            if (existingDept.isPresent()) {
+                departmentId = existingDept.get().getId();
+            } else {
+                Department department = new Department(null, request.getDepartmentName(), request.getDepartmentDescription());
+                departmentId = departmentRepository.save(department);
+            }
         }
 
         // 5. Create Employment

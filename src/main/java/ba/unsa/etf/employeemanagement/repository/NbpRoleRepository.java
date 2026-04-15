@@ -33,6 +33,11 @@ public class NbpRoleRepository {
         return jdbcTemplate.query(sql, mapper, id).stream().findFirst();
     }
 
+    public Optional<NbpRole> findByName(String name) {
+        String sql = "SELECT ID, NAME FROM " + TABLE + " WHERE NAME = ?";
+        return jdbcTemplate.query(sql, mapper, name).stream().findFirst();
+    }
+
     public Long save(NbpRole entity) {
         String sql = "INSERT INTO " + TABLE + " (NAME) VALUES (?)";
 
