@@ -12,15 +12,35 @@ import java.sql.SQLException;
 public class HolidayMapper implements RowMapper<Holiday> {
     @Override
     public Holiday mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Holiday(rs.getLong("id"), rs.getString("holiday_name"), rs.getDate("holiday_date"), rs.getString("country"), rs.getString("description"));
+        return new Holiday(
+            rs.getLong("id"),
+            rs.getString("holiday_name"),
+            rs.getDate("holiday_date"),
+            rs.getString("country"),
+            rs.getString("description"),
+            rs.getString("religion")
+        );
     }
 
     public Holiday mapToEntity(HolidayRequest request) {
-        return new Holiday(null, request.getHolidayName(), request.getHolidayDate(), request.getCountry(), request.getDescription());
+        return new Holiday(
+            null,
+            request.getHolidayName(),
+            request.getHolidayDate(),
+            request.getCountry(),
+            request.getDescription(),
+            request.getReligion()
+        );
     }
 
     public HolidayResponse mapToResponse(Holiday entity) {
-        return HolidayResponse.builder().id(entity.getId()).holidayName(entity.getHolidayName()).holidayDate(entity.getHolidayDate()).country(entity.getCountry()).description(entity.getDescription()).build();
+        return HolidayResponse.builder()
+            .id(entity.getId())
+            .holidayName(entity.getHolidayName())
+            .holidayDate(entity.getHolidayDate())
+            .country(entity.getCountry())
+            .description(entity.getDescription())
+            .religion(entity.getReligion())
+            .build();
     }
 }
-
