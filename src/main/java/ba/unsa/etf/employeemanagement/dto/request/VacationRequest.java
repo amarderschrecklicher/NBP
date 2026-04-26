@@ -11,8 +11,6 @@ public class VacationRequest {
     private Date startDate;
     private Date endDate;
     private String vacationType;
-    private String status;
-    private Long approvedBy;
     private String reason;
 }
 

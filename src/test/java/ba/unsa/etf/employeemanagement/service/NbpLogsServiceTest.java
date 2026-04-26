@@ -1,10 +1,10 @@
 package ba.unsa.etf.employeemanagement.service;
 
 import ba.unsa.etf.employeemanagement.dto.logs.NbpLogsDto;
-import ba.unsa.etf.employeemanagement.mapper.NbpLogsMapper;
-import ba.unsa.etf.employeemanagement.model.NbpLogs;
-import ba.unsa.etf.employeemanagement.repository.NbpLogsRepository;
-import ba.unsa.etf.employeemanagement.service.impl.NbpLogsService;
+import ba.unsa.etf.employeemanagement.mapper.nbp.NbpLogsMapper;
+import ba.unsa.etf.employeemanagement.model.nbp.NbpLogs;
+import ba.unsa.etf.employeemanagement.repository.nbp.NbpLogsRepository;
+import ba.unsa.etf.employeemanagement.service.impl.nbp.NbpLogsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

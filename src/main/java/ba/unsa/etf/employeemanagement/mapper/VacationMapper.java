@@ -3,6 +3,7 @@ package ba.unsa.etf.employeemanagement.mapper;
 import ba.unsa.etf.employeemanagement.dto.request.VacationRequest;
 import ba.unsa.etf.employeemanagement.dto.response.VacationResponse;
 import ba.unsa.etf.employeemanagement.model.Vacation;
+import ba.unsa.etf.employeemanagement.util.enums.VacationStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
@@ -16,11 +17,11 @@ public class VacationMapper implements RowMapper<Vacation> {
     }
 
     public Vacation mapToEntity(VacationRequest request) {
-        return new Vacation(null, request.getEmployeeId(), request.getStartDate(), request.getEndDate(), request.getVacationType(), request.getStatus(), request.getApprovedBy(), request.getReason());
+        return new Vacation(null, request.getEmployeeId(), request.getStartDate(), request.getEndDate(),
+                request.getVacationType(), VacationStatus.PENDING.name(), null, request.getReason());
     }
 
     public VacationResponse mapToResponse(Vacation entity) {
         return VacationResponse.builder().id(entity.getId()).employeeId(entity.getEmployeeId()).startDate(entity.getStartDate()).endDate(entity.getEndDate()).vacationType(entity.getVacationType()).status(entity.getStatus()).approvedBy(entity.getApprovedBy()).reason(entity.getReason()).build();
     }
 }
-

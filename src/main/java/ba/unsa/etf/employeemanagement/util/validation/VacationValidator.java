@@ -40,13 +40,8 @@ public class VacationValidator implements Validator {
                 errors, "vacationType", "vacationType.empty", "Vacation type is required"
         );
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(
-                errors, "status", "status.empty", "Status is required"
-        );
-
         if (request.getReason() != null && request.getReason().length() > 500) {
             errors.rejectValue("reason", "reason.tooLong", "Reason must not exceed 500 characters");
         }
     }
 }
-

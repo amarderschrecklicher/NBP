@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +58,36 @@ public class VacationController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/request")
+    public ResponseEntity<?> requestVacation(@Valid @RequestBody VacationRequest request, BindingResult bindingResult) {
+        vacationValidator.validate(request, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(getErrors(bindingResult));
+        }
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.requestVacation(request));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('EMS_MANAGER', 'EMS_ADMINISTRATOR')")
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<?> approveVacation(@PathVariable Long id, @RequestParam Long approverId) {
+        return ResponseEntity.ok(service.approveVacation(id, approverId));
+    }
+
+    @PreAuthorize("hasAnyRole('EMS_MANAGER', 'EMS_ADMINISTRATOR')")
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<?> rejectVacation(@PathVariable Long id, @RequestParam Long approverId, @RequestParam String reason) {
+        return ResponseEntity.ok(service.rejectVacation(id, approverId, reason));
+    }
+
+    @GetMapping("/{id}/status")
+    public ResponseEntity<?> getVacationStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(Map.of("status", service.getVacationStatus(id)));
     }
 
     private Map<String, String> getErrors(BindingResult bindingResult) {

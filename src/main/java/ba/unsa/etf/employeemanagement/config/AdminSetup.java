@@ -1,7 +1,7 @@
 package ba.unsa.etf.employeemanagement.config;
 
-import ba.unsa.etf.employeemanagement.model.NbpUser;
-import ba.unsa.etf.employeemanagement.repository.NbpUserRepository;
+import ba.unsa.etf.employeemanagement.model.nbp.NbpUser;
+import ba.unsa.etf.employeemanagement.repository.nbp.NbpUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;

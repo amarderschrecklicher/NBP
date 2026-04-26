@@ -1,108 +1,76 @@
 package ba.unsa.etf.employeemanagement.service;
 
-import ba.unsa.etf.employeemanagement.model.*;
+import ba.unsa.etf.employeemanagement.dto.request.VacationRequest;
+import ba.unsa.etf.employeemanagement.dto.response.VacationResponse;
+import ba.unsa.etf.employeemanagement.model.Vacation;
+import ba.unsa.etf.employeemanagement.repository.VacationRepository;
+import ba.unsa.etf.employeemanagement.mapper.VacationMapper;
+import ba.unsa.etf.employeemanagement.service.impl.VacationService;
+import ba.unsa.etf.employeemanagement.util.enums.VacationStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-class VacationRequestServiceTest {
-    private VacationRequestService service;
-    private Map<Long, Employee> employees;
-    private Map<Long, UserCalendar> calendars;
-    private List<VacationRequest> requests;
-    private List<Holiday> holidays;
+class VacationServiceTest {
+    @Mock
+    private VacationRepository vacationRepository;
+    @Mock
+    private VacationMapper vacationMapper;
+    @InjectMocks
+    private VacationService vacationService;
 
     @BeforeEach
     void setUp() {
-        employees = new HashMap<>();
-        calendars = new HashMap<>();
-        requests = new ArrayList<>();
-        holidays = new ArrayList<>();
-        // User 1: works Mon-Fri, is "Bosnian" nationality, "Single" marital status
-        employees.put(1L, new Employee(1L, 1L, "Male", "Bosnian", "Single"));
-        calendars.put(1L, new UserCalendar(1L, new HashSet<>(Arrays.asList(Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY))));
-        service = new VacationRequestService(requests, holidays, calendars, employees);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void requestVacation_withinLimit_succeeds() {
-        Date start = new GregorianCalendar(2026, Calendar.JUNE, 1).getTime();
-        Date end = new GregorianCalendar(2026, Calendar.JUNE, 5).getTime();
-        VacationRequest req = service.requestVacation(1L, start, end);
-        assertEquals(VacationStatus.PENDING, req.getStatus());
-        assertEquals(1L, req.getUserId());
-        assertEquals(start, req.getStartDate());
-        assertEquals(end, req.getEndDate());
+        VacationRequest req = new VacationRequest(1L, new Date(100000), new Date(200000), "ANNUAL", "Family trip");
+        when(vacationRepository.findByEmployeeIdAndYear(eq(1L), anyInt())).thenReturn(Collections.emptyList());
+        Vacation entity = new Vacation(null, 1L, req.getStartDate(), req.getEndDate(), req.getVacationType(), null, null, req.getReason());
+        when(vacationMapper.mapToEntity(req)).thenReturn(entity);
+        Vacation saved = new Vacation(1L, 1L, req.getStartDate(), req.getEndDate(), req.getVacationType(), "PENDING", null, req.getReason());
+        when(vacationRepository.save(any())).thenReturn(1L);
+        when(vacationRepository.findById(1L)).thenReturn(Optional.of(saved));
+        when(vacationMapper.mapToResponse(saved)).thenReturn(VacationResponse.builder().id(1L).employeeId(1L).startDate(req.getStartDate()).endDate(req.getEndDate()).vacationType("ANNUAL").status("PENDING").reason("Family trip").build());
+        VacationResponse resp = vacationService.requestVacation(req);
+        assertEquals("PENDING", resp.getStatus());
+        assertEquals(1L, resp.getEmployeeId());
+        assertEquals(req.getStartDate(), resp.getStartDate());
+        assertEquals(req.getEndDate(), resp.getEndDate());
     }
 
     @Test
     void requestVacation_exceedsLimit_throws() {
-        // Add exactly 21 approved working days for 2026
-        int added = 0;
-        int day = 1;
-        while (added < 21) {
-            Date s = new GregorianCalendar(2026, Calendar.JANUARY, day).getTime();
-            Date e = s;
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(s);
-            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-            if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
-                VacationRequest req = new VacationRequest((long) added, 1L, s, e, VacationStatus.APPROVED);
-                requests.add(req);
-                added++;
-            }
-            day++;
+        List<Vacation> vacations = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            Date d = new Date(100000 + i * 86400000L);
+            vacations.add(new Vacation((long) i, 1L, d, d, "ANNUAL", "APPROVED", null, ""));
         }
-        Date start = new GregorianCalendar(2026, Calendar.JUNE, 1).getTime();
-        Date end = new GregorianCalendar(2026, Calendar.JUNE, 5).getTime();
-        assertThrows(IllegalArgumentException.class, () -> service.requestVacation(1L, start, end));
+        VacationRequest req = new VacationRequest(1L, new Date(2000000), new Date(2000000), "ANNUAL", "");
+        when(vacationRepository.findByEmployeeIdAndYear(eq(1L), anyInt())).thenReturn(vacations);
+        assertThrows(IllegalArgumentException.class, () -> vacationService.requestVacation(req));
     }
 
     @Test
-    void requestVacation_excludesHolidays() {
-        // June 3 is a holiday for "Bosnian" nationality
-        holidays.add(new Holiday(1L, "Bosnian Holiday", new GregorianCalendar(2026, Calendar.JUNE, 3).getTime(), "Bosnian", "desc", "Single"));
-        Date start = new GregorianCalendar(2026, Calendar.JUNE, 1).getTime();
-        Date end = new GregorianCalendar(2026, Calendar.JUNE, 5).getTime();
-        VacationRequest req = service.requestVacation(1L, start, end);
-        // Only 4 working days should be counted (June 3 is a holiday)
-        assertEquals(VacationStatus.PENDING, req.getStatus());
-    }
-
-    @Test
-    void requestVacation_nonWorkingDaysNotCounted() {
-        // User only works Monday
-        calendars.put(1L, new UserCalendar(1L, new HashSet<>(Collections.singletonList(Calendar.MONDAY))));
-        Date start = new GregorianCalendar(2026, Calendar.JUNE, 1).getTime(); // Monday
-        Date end = new GregorianCalendar(2026, Calendar.JUNE, 7).getTime(); // Sunday
-        service = new VacationRequestService(requests, holidays, calendars, employees);
-        VacationRequest req = service.requestVacation(1L, start, end);
-        // Only one working day (Monday)
-        assertEquals(VacationStatus.PENDING, req.getStatus());
-    }
-
-    @Test
-    void getRequestsForUser_returnsCorrectRequests() {
-        requests.add(new VacationRequest(1L, 1L, new Date(), new Date(), VacationStatus.PENDING));
-        requests.add(new VacationRequest(2L, 2L, new Date(), new Date(), VacationStatus.PENDING));
-        List<VacationRequest> user1 = service.getRequestsForUser(1L);
-        assertEquals(1, user1.size());
-        assertEquals(1L, user1.get(0).getUserId());
-    }
-
-    @Test
-    void updateRequestStatus_updatesStatus() {
-        VacationRequest req = new VacationRequest(1L, 1L, new Date(), new Date(), VacationStatus.PENDING);
-        requests.add(req);
-        VacationRequest updated = service.updateRequestStatus(1L, VacationStatus.APPROVED);
-        assertEquals(VacationStatus.APPROVED, updated.getStatus());
-    }
-
-    @Test
-    void updateRequestStatus_notFound_throws() {
-        assertThrows(IllegalArgumentException.class, () -> service.updateRequestStatus(99L, VacationStatus.APPROVED));
+    void requestVacation_setsStatusToPending() {
+        VacationRequest req = new VacationRequest(1L, new Date(100000), new Date(200000), "ANNUAL", "");
+        when(vacationRepository.findByEmployeeIdAndYear(eq(1L), anyInt())).thenReturn(Collections.emptyList());
+        Vacation entity = new Vacation(null, 1L, req.getStartDate(), req.getEndDate(), req.getVacationType(), null, null, req.getReason());
+        when(vacationMapper.mapToEntity(req)).thenReturn(entity);
+        Vacation saved = new Vacation(1L, 1L, req.getStartDate(), req.getEndDate(), req.getVacationType(), "PENDING", null, req.getReason());
+        when(vacationRepository.save(any())).thenReturn(1L);
+        when(vacationRepository.findById(1L)).thenReturn(Optional.of(saved));
+        when(vacationMapper.mapToResponse(saved)).thenReturn(VacationResponse.builder().id(1L).employeeId(1L).startDate(req.getStartDate()).endDate(req.getEndDate()).vacationType("ANNUAL").status("PENDING").reason("").build());
+        VacationResponse resp = vacationService.requestVacation(req);
+        assertEquals("PENDING", resp.getStatus());
     }
 }

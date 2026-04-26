@@ -1,59 +1,79 @@
 package ba.unsa.etf.employeemanagement.controller;
 
-import ba.unsa.etf.employeemanagement.model.*;
-import ba.unsa.etf.employeemanagement.service.VacationRequestService;
+import ba.unsa.etf.employeemanagement.dto.request.VacationRequest;
+import ba.unsa.etf.employeemanagement.dto.response.VacationResponse;
+import ba.unsa.etf.employeemanagement.service.api.IVacationService;
+import ba.unsa.etf.employeemanagement.util.enums.VacationStatus;
+import ba.unsa.etf.employeemanagement.util.validation.VacationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class VacationRequestControllerTest {
     @Mock
-    private VacationRequestService vacationRequestService;
-
+    private IVacationService vacationService;
+    @Mock
+    private BindingResult bindingResult;
+    @Mock
+    private VacationValidator vacationValidator;
     @InjectMocks
-    private VacationRequestController vacationRequestController;
+    private VacationController vacationController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        doNothing().when(vacationValidator).validate(any(), any());
     }
 
     @Test
-    void requestVacation_returnsVacationRequest() {
-        VacationRequest req = new VacationRequest(1L, 2L, new Date(100000), new Date(200000), VacationStatus.PENDING);
-        when(vacationRequestService.requestVacation(2L, req.getStartDate(), req.getEndDate())).thenReturn(req);
-        ResponseEntity<VacationRequest> response = vacationRequestController.requestVacation(2L, req.getStartDate(), req.getEndDate());
-        assertEquals(req, response.getBody());
-        verify(vacationRequestService).requestVacation(2L, req.getStartDate(), req.getEndDate());
+    void requestVacation_returnsCreated() {
+        VacationRequest req = new VacationRequest(1L, new Date(100000), new Date(200000), "ANNUAL", "Family trip");
+        VacationResponse resp = VacationResponse.builder().id(1L).employeeId(1L).startDate(req.getStartDate()).endDate(req.getEndDate()).vacationType("ANNUAL").status("PENDING").reason("Family trip").build();
+        when(bindingResult.hasErrors()).thenReturn(false);
+        when(vacationService.requestVacation(req)).thenReturn(resp);
+        ResponseEntity<?> response = vacationController.requestVacation(req, bindingResult);
+        assertEquals(201, response.getStatusCode().value());
+        assertEquals(resp, response.getBody());
+        verify(vacationService).requestVacation(req);
     }
 
     @Test
-    void getUserRequests_returnsList() {
-        List<VacationRequest> list = Arrays.asList(
-                new VacationRequest(1L, 2L, new Date(100000), new Date(200000), VacationStatus.PENDING),
-                new VacationRequest(2L, 2L, new Date(300000), new Date(400000), VacationStatus.APPROVED)
-        );
-        when(vacationRequestService.getRequestsForUser(2L)).thenReturn(list);
-        ResponseEntity<List<VacationRequest>> response = vacationRequestController.getUserRequests(2L);
-        assertEquals(list, response.getBody());
-        verify(vacationRequestService).getRequestsForUser(2L);
+    void approveVacation_returnsOk() {
+        VacationResponse resp = VacationResponse.builder().id(1L).employeeId(1L).status("APPROVED").build();
+        when(vacationService.approveVacation(1L, 10L)).thenReturn(resp);
+        ResponseEntity<?> response = vacationController.approveVacation(1L, 10L);
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(resp, response.getBody());
+        verify(vacationService).approveVacation(1L, 10L);
     }
 
     @Test
-    void updateStatus_returnsUpdatedRequest() {
-        VacationRequest updated = new VacationRequest(1L, 2L, new Date(100000), new Date(200000), VacationStatus.APPROVED);
-        when(vacationRequestService.updateRequestStatus(1L, VacationStatus.APPROVED)).thenReturn(updated);
-        ResponseEntity<VacationRequest> response = vacationRequestController.updateStatus(1L, VacationStatus.APPROVED);
-        assertEquals(updated, response.getBody());
-        verify(vacationRequestService).updateRequestStatus(1L, VacationStatus.APPROVED);
+    void rejectVacation_returnsOk() {
+        VacationResponse resp = VacationResponse.builder().id(1L).employeeId(1L).status("REJECTED").reason("Not enough days").build();
+        when(vacationService.rejectVacation(1L, 10L, "Not enough days")).thenReturn(resp);
+        ResponseEntity<?> response = vacationController.rejectVacation(1L, 10L, "Not enough days");
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(resp, response.getBody());
+        verify(vacationService).rejectVacation(1L, 10L, "Not enough days");
+    }
+
+    @Test
+    void getVacationStatus_returnsStatus() {
+        when(vacationService.getVacationStatus(1L)).thenReturn(VacationStatus.PENDING);
+        ResponseEntity<?> response = vacationController.getVacationStatus(1L);
+        assertEquals(200, response.getStatusCode().value());
+        assertTrue(((Map<?, ?>) response.getBody()).containsKey("status"));
+        assertEquals(VacationStatus.PENDING, ((Map<?, ?>) response.getBody()).get("status"));
+        verify(vacationService).getVacationStatus(1L);
     }
 }
-
