@@ -4,6 +4,7 @@ import ba.unsa.etf.employeemanagement.dto.request.VacationRequest;
 import ba.unsa.etf.employeemanagement.dto.response.VacationResponse;
 import ba.unsa.etf.employeemanagement.service.api.IVacationService;
 import ba.unsa.etf.employeemanagement.util.validation.VacationValidator;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/vacations")
 @RequiredArgsConstructor
