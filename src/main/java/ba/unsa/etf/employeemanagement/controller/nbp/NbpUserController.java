@@ -3,6 +3,7 @@ package ba.unsa.etf.employeemanagement.controller.nbp;
 import ba.unsa.etf.employeemanagement.dto.request.NbpUserRequest;
 import ba.unsa.etf.employeemanagement.dto.response.NbpUserResponse;
 import ba.unsa.etf.employeemanagement.service.impl.nbp.NbpUserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor

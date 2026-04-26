@@ -3,6 +3,7 @@ package ba.unsa.etf.employeemanagement.controller;
 import ba.unsa.etf.employeemanagement.dto.request.VehicleRequest;
 import ba.unsa.etf.employeemanagement.dto.response.VehicleResponse;
 import ba.unsa.etf.employeemanagement.service.api.IVehicleService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/vehicles")
 @RequiredArgsConstructor

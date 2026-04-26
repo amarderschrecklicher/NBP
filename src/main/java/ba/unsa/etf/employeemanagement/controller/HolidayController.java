@@ -4,6 +4,7 @@ import ba.unsa.etf.employeemanagement.dto.request.HolidayRequest;
 import ba.unsa.etf.employeemanagement.dto.response.HolidayResponse;
 import ba.unsa.etf.employeemanagement.service.api.IHolidayService;
 import ba.unsa.etf.employeemanagement.util.validation.HolidayValidator;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/holidays")
 @RequiredArgsConstructor

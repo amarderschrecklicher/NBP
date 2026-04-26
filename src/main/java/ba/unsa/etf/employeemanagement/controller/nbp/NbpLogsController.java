@@ -1,6 +1,7 @@
 package ba.unsa.etf.employeemanagement.controller.nbp;
 import ba.unsa.etf.employeemanagement.dto.logs.NbpLogsDto;
 import ba.unsa.etf.employeemanagement.service.impl.nbp.NbpLogsService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/logs")
 @RequiredArgsConstructor

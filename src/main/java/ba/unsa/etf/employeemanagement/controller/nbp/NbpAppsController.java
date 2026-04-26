@@ -1,12 +1,14 @@
 package ba.unsa.etf.employeemanagement.controller.nbp;
 import ba.unsa.etf.employeemanagement.dto.apps.NbpAppsDto;
 import ba.unsa.etf.employeemanagement.service.impl.nbp.NbpAppsService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/apps")
 @RequiredArgsConstructor
