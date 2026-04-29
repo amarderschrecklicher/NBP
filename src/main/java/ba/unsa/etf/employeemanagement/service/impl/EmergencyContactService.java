@@ -7,6 +7,7 @@ import ba.unsa.etf.employeemanagement.mapper.EmergencyContactMapper;
 import ba.unsa.etf.employeemanagement.model.EmergencyContact;
 import ba.unsa.etf.employeemanagement.repository.EmergencyContactRepository;
 import ba.unsa.etf.employeemanagement.service.api.IEmergencyContactService;
+import ba.unsa.etf.employeemanagement.validation.EmergencyContactValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class EmergencyContactService implements IEmergencyContactService {
     @Override
     public EmergencyContactResponse save(EmergencyContactRequest request) {
         EmergencyContact emergencyContact = emergencyContactMapper.mapToEntity(request);
+        EmergencyContactValidator.validate(emergencyContact);
         Long generatedId = emergencyContactRepository.save(emergencyContact);
 
         EmergencyContact saved = emergencyContactRepository.findById(generatedId)
@@ -52,6 +54,7 @@ public class EmergencyContactService implements IEmergencyContactService {
 
         EmergencyContact emergencyContact = emergencyContactMapper.mapToEntity(request);
         emergencyContact.setId(existing.getId());
+        EmergencyContactValidator.validate(emergencyContact);
 
         emergencyContactRepository.update(id, emergencyContact);
 
