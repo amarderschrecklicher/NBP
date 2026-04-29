@@ -7,6 +7,7 @@ import ba.unsa.etf.employeemanagement.mapper.WorkPermitMapper;
 import ba.unsa.etf.employeemanagement.model.WorkPermit;
 import ba.unsa.etf.employeemanagement.repository.WorkPermitRepository;
 import ba.unsa.etf.employeemanagement.service.api.IWorkPermitService;
+import ba.unsa.etf.employeemanagement.validation.WorkPermitValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class WorkPermitService implements IWorkPermitService {
     @Override
     public WorkPermitResponse save(WorkPermitRequest request) {
         WorkPermit workPermit = workPermitMapper.mapToEntity(request);
+        WorkPermitValidator.validate(workPermit);
         Long id = workPermitRepository.save(workPermit);
 
         WorkPermit saved = workPermitRepository.findById(id)
@@ -52,6 +54,7 @@ public class WorkPermitService implements IWorkPermitService {
 
         WorkPermit workPermit = workPermitMapper.mapToEntity(request);
         workPermit.setId(existing.getId());
+        WorkPermitValidator.validate(workPermit);
 
         workPermitRepository.update(id, workPermit);
 
