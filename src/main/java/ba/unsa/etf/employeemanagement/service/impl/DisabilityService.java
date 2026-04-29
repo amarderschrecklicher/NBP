@@ -7,6 +7,7 @@ import ba.unsa.etf.employeemanagement.mapper.DisabilityMapper;
 import ba.unsa.etf.employeemanagement.model.Disability;
 import ba.unsa.etf.employeemanagement.repository.DisabilityRepository;
 import ba.unsa.etf.employeemanagement.service.api.IDisabilityService;
+import ba.unsa.etf.employeemanagement.validation.DisabilityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class DisabilityService implements IDisabilityService {
     @Override
     public DisabilityResponse save(DisabilityRequest request) {
         Disability disability = disabilityMapper.mapToEntity(request);
+        DisabilityValidator.validate(disability);
         Long id = disabilityRepository.save(disability);
 
         Disability saved = disabilityRepository.findById(id)
@@ -52,6 +54,7 @@ public class DisabilityService implements IDisabilityService {
 
         Disability disability = disabilityMapper.mapToEntity(request);
         disability.setId(existing.getId());
+        DisabilityValidator.validate(disability);
 
         disabilityRepository.update(id, disability);
 
