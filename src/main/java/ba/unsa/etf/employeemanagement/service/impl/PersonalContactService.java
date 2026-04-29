@@ -7,6 +7,7 @@ import ba.unsa.etf.employeemanagement.mapper.PersonalContactMapper;
 import ba.unsa.etf.employeemanagement.model.PersonalContact;
 import ba.unsa.etf.employeemanagement.repository.PersonalContactRepository;
 import ba.unsa.etf.employeemanagement.service.api.IPersonalContactService;
+import ba.unsa.etf.employeemanagement.validation.PersonalContactValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class PersonalContactService implements IPersonalContactService {
     @Override
     public PersonalContactResponse save(PersonalContactRequest request) {
         PersonalContact personalContact = personalContactMapper.mapToEntity(request);
+        PersonalContactValidator.validate(personalContact);
         Long generatedId = personalContactRepository.save(personalContact);
 
         PersonalContact saved = personalContactRepository.findById(generatedId)
@@ -52,6 +54,7 @@ public class PersonalContactService implements IPersonalContactService {
 
         PersonalContact personalContact = personalContactMapper.mapToEntity(request);
         personalContact.setId(existing.getId());
+        PersonalContactValidator.validate(personalContact);
 
         personalContactRepository.update(id, personalContact);
 
