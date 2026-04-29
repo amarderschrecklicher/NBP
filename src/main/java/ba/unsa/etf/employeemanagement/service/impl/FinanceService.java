@@ -7,6 +7,7 @@ import ba.unsa.etf.employeemanagement.mapper.FinanceMapper;
 import ba.unsa.etf.employeemanagement.model.Finance;
 import ba.unsa.etf.employeemanagement.repository.FinanceRepository;
 import ba.unsa.etf.employeemanagement.service.api.IFinanceService;
+import ba.unsa.etf.employeemanagement.validation.FinanceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class FinanceService implements IFinanceService {
     @Override
     public FinanceResponse save(FinanceRequest request) {
         Finance finance = financeMapper.mapToEntity(request);
+        FinanceValidator.validate(finance);
         Long generatedId = financeRepository.save(finance);
 
         Finance saved = financeRepository.findById(generatedId)
@@ -52,6 +54,7 @@ public class FinanceService implements IFinanceService {
 
         Finance finance = financeMapper.mapToEntity(request);
         finance.setId(existing.getId());
+        FinanceValidator.validate(finance);
 
         financeRepository.update(id, finance);
 
