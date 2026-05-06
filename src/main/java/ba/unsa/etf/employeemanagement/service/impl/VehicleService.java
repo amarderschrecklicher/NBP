@@ -7,6 +7,7 @@ import ba.unsa.etf.employeemanagement.mapper.VehicleMapper;
 import ba.unsa.etf.employeemanagement.model.Vehicle;
 import ba.unsa.etf.employeemanagement.repository.VehicleRepository;
 import ba.unsa.etf.employeemanagement.service.api.IVehicleService;
+import ba.unsa.etf.employeemanagement.validation.VehicleValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class VehicleService implements IVehicleService {
     @Override
     public VehicleResponse save(VehicleRequest request) {
         Vehicle vehicle = vehicleMapper.mapToEntity(request);
+        VehicleValidator.validate(vehicle);
         Long id = vehicleRepository.save(vehicle);
 
         Vehicle saved = vehicleRepository.findById(id)
@@ -52,6 +54,7 @@ public class VehicleService implements IVehicleService {
 
         Vehicle vehicle = vehicleMapper.mapToEntity(request);
         vehicle.setId(existing.getId());
+        VehicleValidator.validate(vehicle);
 
         vehicleRepository.update(id, vehicle);
 
