@@ -7,6 +7,7 @@ import ba.unsa.etf.employeemanagement.mapper.FamilyMemberMapper;
 import ba.unsa.etf.employeemanagement.model.FamilyMember;
 import ba.unsa.etf.employeemanagement.repository.FamilyMemberRepository;
 import ba.unsa.etf.employeemanagement.service.api.IFamilyMemberService;
+import ba.unsa.etf.employeemanagement.validation.FamilyMemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class FamilyMemberService implements IFamilyMemberService {
     @Override
     public FamilyMemberResponse save(FamilyMemberRequest request) {
         FamilyMember familyMember = familyMemberMapper.mapToEntity(request);
+        FamilyMemberValidator.validate(familyMember);
         Long generatedId = familyMemberRepository.save(familyMember);
 
         FamilyMember saved = familyMemberRepository.findById(generatedId)
@@ -52,6 +54,7 @@ public class FamilyMemberService implements IFamilyMemberService {
 
         FamilyMember familyMember = familyMemberMapper.mapToEntity(request);
         familyMember.setId(existing.getId());
+        FamilyMemberValidator.validate(familyMember);
 
         familyMemberRepository.update(id, familyMember);
 
