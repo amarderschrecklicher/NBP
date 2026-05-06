@@ -24,4 +24,5 @@
     <include file="db/changelog/changes/work_permit.sql"/>
     <include file="db/changelog/changes/roles_seed.sql"/>
     <include file="db/changelog/changes/refresh_token.sql"/>
+    <include file="db/changelog/changes/employee_photo.sql"/>
 </databaseChangeLog>
