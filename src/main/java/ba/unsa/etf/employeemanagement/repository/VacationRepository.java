@@ -5,6 +5,7 @@ import ba.unsa.etf.employeemanagement.model.Vacation;
 import ba.unsa.etf.employeemanagement.util.enums.VacationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,19 @@ import java.util.Optional;
 public class VacationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final VacationMapper mapper;
+
+    private final RowMapper<Vacation> vacationRowMapper = (rs, rowNum) -> {
+        Vacation vacation = new Vacation();
+        vacation.setId(rs.getLong("ID"));
+        vacation.setEmployeeId(rs.getLong("EMPLOYEE_ID"));
+        vacation.setStartDate(rs.getDate("START_DATE"));
+        vacation.setEndDate(rs.getDate("END_DATE"));
+        vacation.setVacationType(rs.getString("VACATION_TYPE"));
+        vacation.setStatus(rs.getString("STATUS"));
+        vacation.setApprovedBy(rs.getObject("APPROVED_BY") != null ? rs.getLong("APPROVED_BY") : null);
+        vacation.setReason(rs.getString("REASON"));
+        return vacation;
+    };
 
     public List<Vacation> findAll() {
         String sql = "SELECT id, employee_id, start_date, end_date, vacation_type, status, approved_by, reason FROM vacation";
@@ -68,4 +82,12 @@ public class VacationRepository {
         String sql = "UPDATE vacation SET status = ?, approved_by = ?, reason = ? WHERE id = ?";
         jdbcTemplate.update(sql, status.name(), approverId, reason, id);
     }
+
+    public List<Vacation> findByMonthAndYear(Integer month, Integer year) {
+        String sql = "SELECT * FROM VACATION WHERE " +
+                "(EXTRACT(MONTH FROM START_DATE) = ? AND EXTRACT(YEAR FROM START_DATE) = ?) " +
+                "OR (EXTRACT(MONTH FROM END_DATE) = ? AND EXTRACT(YEAR FROM END_DATE) = ?)";
+        return jdbcTemplate.query(sql, vacationRowMapper, month, year, month, year);
+    }
+
 }
