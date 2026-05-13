@@ -26,4 +26,7 @@
     <include file="db/changelog/changes/refresh_token.sql"/>
     <include file="db/changelog/changes/employee_photo.sql"/>
     <include file="db/changelog/changes/vacation_report.sql"/>
+
+    <include file="db/changelog/changes/backup.sql"/>
+    <include file="db/changelog/changes/backup_procedure.sql"/>
 </databaseChangeLog>
