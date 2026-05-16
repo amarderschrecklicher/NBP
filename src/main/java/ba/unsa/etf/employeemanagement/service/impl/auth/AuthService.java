@@ -12,6 +12,7 @@ import ba.unsa.etf.employeemanagement.service.JwtProvider;
 import ba.unsa.etf.employeemanagement.service.api.IAuthService;
 import ba.unsa.etf.employeemanagement.controller.auth.JwtResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService implements IAuthService {
 
     private final NbpUserRepository userRepository;
@@ -28,6 +30,7 @@ public class AuthService implements IAuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final ba.unsa.etf.employeemanagement.service.impl.mongo.LoginEventService loginEventService;
 
     @Override
     public JwtResponse authenticate(LoginRequest loginRequest) {
@@ -65,6 +68,12 @@ public class AuthService implements IAuthService {
 
         refreshTokenRepository.save(refreshToken);
 
+        // Persist login event (in MongoDB). Do not fail authentication if this fails.
+        try {
+            loginEventService.saveLoginEvent(user.getId());
+        } catch (Exception ex) {
+            log.warn("Could not save login event for user {}: {}", user.getId(), ex.getMessage());
+        }
         return new JwtResponse(accessToken, refreshToken.getToken());
     }
 
