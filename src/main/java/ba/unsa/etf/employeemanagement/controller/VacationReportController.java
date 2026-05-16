@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -43,6 +44,22 @@ public class VacationReportController {
     public ResponseEntity<VacationReportResponse> getReportById(@PathVariable Long id) {
         return ResponseEntity.ok(reportService.findById(id));
     }
+
+    /**
+     * Upload a vacation report PDF manually.
+     */
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<VacationReportResponse> uploadReport(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("month") Integer month,
+            @RequestParam("year") Integer year,
+            @RequestParam("generatedBy") Long generatedBy) {
+
+        VacationReportResponse response = reportService.uploadReport(file, month, year, generatedBy);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
 
     /**
      * Download the PDF by report ID.

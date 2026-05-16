@@ -15,9 +15,13 @@ import ba.unsa.etf.employeemanagement.repository.EmployeeRepository;
 import ba.unsa.etf.employeemanagement.repository.nbp.NbpUserRepository;
 import ba.unsa.etf.employeemanagement.service.api.IVacationReportService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,6 +100,46 @@ public class VacationReportService implements IVacationReportService {
 
         return reportMapper.mapToResponse(report);
     }
+    @Override
+    public VacationReportResponse uploadReport(MultipartFile file, Integer month, Integer year, Long generatedBy) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Uploaded file is empty.");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.equals(MediaType.APPLICATION_PDF_VALUE)) {
+            throw new IllegalArgumentException("Only PDF files are accepted.");
+        }
+
+        try {
+            byte[] pdfBytes = file.getBytes();
+
+            Optional<VacationReport> existingReport = reportRepository.findByMonthAndYear(month, year);
+
+            VacationReport report;
+            if (existingReport.isPresent()) {
+                report = existingReport.get();
+                report.setPdfContent(pdfBytes);
+                report.setGeneratedAt(new Date());
+                report.setGeneratedBy(generatedBy);
+                reportRepository.update(report);
+            } else {
+                report = new VacationReport();
+                report.setReportMonth(month);
+                report.setReportYear(year);
+                report.setPdfContent(pdfBytes);
+                report.setGeneratedAt(new Date());
+                report.setGeneratedBy(generatedBy);
+                Long id = reportRepository.save(report);
+                report.setId(id);
+            }
+
+            return reportMapper.mapToResponse(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read uploaded file.", e);
+        }
+    }
+
 
     @Override
     public byte[] downloadReport(Long id) {
