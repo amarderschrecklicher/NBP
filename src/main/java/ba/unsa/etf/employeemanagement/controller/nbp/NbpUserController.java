@@ -13,6 +13,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import ba.unsa.etf.employeemanagement.dto.response.LoginEventDto;
+import ba.unsa.etf.employeemanagement.dto.response.UserWithLoginEventsResponse;
+import ba.unsa.etf.employeemanagement.service.impl.mongo.LoginEventService;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
@@ -21,6 +26,7 @@ import java.util.List;
 public class NbpUserController {
 
     private final NbpUserService service;
+    private final LoginEventService loginEventService;
 
     @GetMapping
     public List<NbpUserResponse> findAll() {
@@ -52,6 +58,25 @@ public class NbpUserController {
     @GetMapping("/count")
     public ResponseEntity<Long> countUsers() {
         return ResponseEntity.ok(service.count());
+    }
+
+    @GetMapping("/{id}/with-logins")
+    public ResponseEntity<UserWithLoginEventsResponse> getUserWithLoginEvents(@PathVariable Long id) {
+        NbpUserResponse user = service.findById(id);
+        var events = loginEventService.findByUserId(id);
+
+        List<LoginEventDto> dtoEvents = events.stream().map(e -> LoginEventDto.builder()
+                .id(e.getId())
+                .userId(e.getUserId())
+                .timestamp(e.getTimestamp())
+                .build()).collect(Collectors.toList());
+
+        UserWithLoginEventsResponse resp = UserWithLoginEventsResponse.builder()
+                .user(user)
+                .loginEvents(dtoEvents)
+                .build();
+
+        return ResponseEntity.ok(resp);
     }
 }
 
