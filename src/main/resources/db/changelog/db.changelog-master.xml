@@ -27,5 +27,8 @@
     <include file="db/changelog/changes/employee_photo.sql"/>
     <include file="db/changelog/changes/vacation_report.sql"/>
 
+    <include file="db/changelog/changes/pkg_employee.sql"/>
+    <include file="db/changelog/changes/pkg_vacation.sql"/>
+    <include file="db/changelog/changes/pkg_vacation_body_fix.sql"/>
 
 </databaseChangeLog>
