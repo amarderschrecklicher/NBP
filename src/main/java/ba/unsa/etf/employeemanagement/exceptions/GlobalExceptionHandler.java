@@ -1,7 +1,9 @@
 package ba.unsa.etf.employeemanagement.exceptions;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import ba.unsa.etf.employeemanagement.util.OraclePlsqlErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -54,6 +56,16 @@ public class GlobalExceptionHandler {
 
         body.put("errors", fieldErrors);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleDataAccess(DataAccessException ex) {
+        RuntimeException translated = OraclePlsqlErrors.translate(ex);
+        if (translated instanceof BadRequestException badRequest) {
+            return buildResponse(HttpStatus.BAD_REQUEST, badRequest.getMessage());
+        }
+        String message = ex.getMostSpecificCause().getMessage();
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, message != null ? message : "Database error");
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
