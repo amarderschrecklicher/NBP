@@ -40,6 +40,17 @@ public class EmploymentRepository {
         return result.stream().findFirst();
     }
 
+    public Optional<Employment> findByEmployeeId(Long employeeId) {
+        String sql = """
+                SELECT id, employee_id, employment_number, hire_date, termination_date,
+                       job_title, employment_type, status, department_id
+                FROM employment
+                WHERE employee_id = ?
+                """;
+        List<Employment> result = jdbcTemplate.query(sql, employmentMapper, employeeId);
+        return result.stream().findFirst();
+    }
+
     public Long save(Employment employment) {
         String sql = """
                 INSERT INTO employment (
