@@ -26,6 +26,6 @@
     <include file="db/changelog/changes/refresh_token.sql"/>
     <include file="db/changelog/changes/employee_photo.sql"/>
     <include file="db/changelog/changes/vacation_report.sql"/>
+    <include file="db/changelog/changes/views.sql"/>
     <include file="db/changelog/changes/indexes.sql"/>
-
 </databaseChangeLog>
