@@ -31,4 +31,5 @@
     <include file="db/changelog/changes/pkg_vacation_body_fix.sql"/>
     <include file="db/changelog/changes/views.sql"/>
     <include file="db/changelog/changes/indexes.sql"/>
+    <include file="db/changelog/changes/pkg_xml_import.sql"/>
 </databaseChangeLog>
