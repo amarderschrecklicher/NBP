@@ -20,7 +20,7 @@ import java.util.Date;
 )
 public class EmployeeRequest {
 
-    // ── Employee fields ──
+    // Employee fields
     @ValueOfEnum(enumClass = Gender.class, message = "Gender must be one of: MALE, FEMALE")
     @Size(max = 50, message = "Gender must not exceed 50 characters")
     private String gender;
@@ -32,7 +32,7 @@ public class EmployeeRequest {
     @Size(max = 50, message = "Marital status must not exceed 50 characters")
     private String maritalStatus;
 
-    // ── Address fields ──
+    // Address fields
     @Size(max = 255, message = "Street must not exceed 255 characters")
     private String street;
 
@@ -45,7 +45,7 @@ public class EmployeeRequest {
     @Size(max = 255, message = "Country must not exceed 255 characters")
     private String country;
 
-    // ── NbpUser fields ──
+    // NbpUser fields
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 255, message = "First name must be between 2 and 255 characters")
     @Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿčćžšđČĆŽŠĐ' -]+$", message = "First name can only contain letters, spaces, hyphens, and apostrophes")
