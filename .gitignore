@@ -35,3 +35,4 @@ build/
 .env
 *.yml
 *.yaml
+**/resources/application.properties
